@@ -29,17 +29,31 @@ class AskWindow(Screen):
         WriteWindow.file = self.file.text
         WriteWindow.to_lan = self.to.text
         WriteWindow.from_lan = self.from_lan.text
-        WriteWindow().create()
+        Tools().create()
 
 
 
 class WriteWindow(Screen):
     word = ObjectProperty(None)
     def btn(self):
-        self.translate(self.word.text,WriteWindow.to_lan, WriteWindow.from_lan)
+        Tools().translate(self.word.text,WriteWindow.to_lan, WriteWindow.from_lan)
         
         self.word.text = ""
         
+    
+
+
+  
+
+
+
+
+
+
+class WindowManager(ScreenManager):
+    pass
+
+class Tools:
     def translate(self, word_to_trans, to_lan, from_lan):
         #print(to_lan)
          
@@ -113,19 +127,6 @@ class WriteWindow(Screen):
             f.seek(0)
             json.dump(d, f, indent= 2)
         f.close()
-
-
-
-  
-
-
-
-
-
-
-class WindowManager(ScreenManager):
-    pass
-
 
 
 kv = Builder.load_file("anj.kv")
