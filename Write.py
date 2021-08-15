@@ -46,28 +46,27 @@ def check_word( word, file):
     return False
 
 
-def create(file):
+def create():
     try:
         
         f = open('data/global.json', 'r+')
         
         
-        data = json.load(f)
-        try:
-            
-            a = data[file]
-        except:
-            
-            fl = {file : {}}
-            data.update(fl)
-            f.seek(0)
-            json.dump(data, f, indent=2)
-        
     except:
         
         f = open('data/global.json', 'a')
         
-        d = {file : {}}
-        f.seek(0)
+        d = {}
         json.dump(d, f, indent= 2)
     f.close()
+def new_file(file):
+    f = open('data/global.json', 'r+')
+    data = json.load(f)
+    try:
+        a = data[file]
+    except:
+        
+        fl = {file : {}}
+        data.update(fl)
+        f.seek(0)
+        json.dump(data, f, indent=2)

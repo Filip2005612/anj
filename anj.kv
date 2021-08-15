@@ -8,6 +8,7 @@ WindowManager:
 
 <ModeWindow>
     name: "mode"
+    on_enter: root.new_file()
     FloatLayout:
 
         size: root.width, root.height
@@ -113,6 +114,7 @@ WindowManager:
             size_hint: 0.2,0.25
             pos_hint: {"x":0,"top":0.50}
             text:"z jazyka: "
+
 <TrainWindow>
     name: "train"
     question: question
@@ -122,6 +124,7 @@ WindowManager:
     
     on_enter: root.show()
     on_enter: root.focus()
+
 
 
     FloatLayout:

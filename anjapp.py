@@ -13,7 +13,7 @@ from textblob import TextBlob
 import Write
 import Training
 
-
+Write.create()
 file = ""
 to_lan = ""
 from_lan = ""
@@ -29,12 +29,18 @@ class AskWindow(Screen):
         file = self.f.text
         to_lan = self.to.text
         from_lan = self.from_lan.text
-        Write.create(file)
+
      
      
 
 class ModeWindow(Screen):
-    pass
+    def new_file(self):
+        print('vytvaram novu filu')
+        Write.new_file(file)
+        TrainWindow.random_numbers = Training.choose(file)
+
+        
+        
 
         
 
@@ -54,9 +60,12 @@ class TrainWindow(Screen):
     question = ObjectProperty(None)
     accuracy = ObjectProperty(None)
     answer = ObjectProperty(None)
+   
+    
     index = 0
-    random_numbers = Training.choose(file)
     correct = 0
+    def __init__(self, **kw):
+        super().__init__(**kw)
 
     def show(self):
         self.question.text = Training.train(file,TrainWindow.random_numbers, TrainWindow.index, to_lan)
@@ -90,7 +99,7 @@ class TrainWindow(Screen):
         TrainWindow.correct = 0
         TrainWindow.random_numbers = Training.choose(file)
         self.accuracy.text = ''
-
+    
 
 
 

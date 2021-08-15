@@ -19,7 +19,7 @@ def choose(file):
                 
                 
 def train(file, random_numbers, index, to_lan):
-    
+    print(random_numbers)
     with open('data/global.json', 'r') as f:
         data = json.load(f)
         lines = list(data[file].items())
