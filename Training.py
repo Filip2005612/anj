@@ -1,11 +1,16 @@
 import random
 import json
-
-def choose(file):
+def check_file(board):
+    with open('data/global.json', 'r') as f:
+        data = json.load(f)
+        lines = list(data[board].items())
+        if len(lines) == 0:
+            return True
+def choose(board):
     with open('data/global.json', 'r') as f:
         data = json.load(f)
 
-        lines = list(data[file].items())
+        lines = list(data[board].items())
 
         try:
             random_numbers = random.sample(range(len(lines)), 10)
@@ -18,11 +23,11 @@ def choose(file):
             
                 
                 
-def train(file, random_numbers, index, to_lan):
+def train(board, random_numbers, index, to_lan):
     print(random_numbers)
     with open('data/global.json', 'r') as f:
         data = json.load(f)
-        lines = list(data[file].items())
+        lines = list(data[board].items())
         if to_lan == 'sk':
             question = lines[random_numbers[index]][0]
         if to_lan == 'en':
@@ -44,10 +49,10 @@ def train(file, random_numbers, index, to_lan):
 
 
 
-def check(index,random_numbers, answer, file, to_lan):
+def check(index,random_numbers, answer, board, to_lan):
     with open('data/global.json', 'r') as f:
         data = json.load(f)
-        lines = list(data[file].items())
+        lines = list(data[board].items())
         
         if to_lan == 'sk':
             right_answer = lines[random_numbers[index-1]][1]
