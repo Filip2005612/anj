@@ -1,14 +1,57 @@
 WindowManager:
+    NameWindow:
     AskWindow: 
     ModeWindow:
     WriteWindow:
     TrainWindow:
+    
+<NameWindow>
+    size: root.width, root.height
+    name: "name"
+    name_of_user: name_of_user
+    FloatLayout:
+        TextInput:
+            id :name_of_user
+            size_hint: 0.8, 0.15
+            pos_hint: {"x":0.2, "top":1}
+            multiline: False
+        Label:
+            text: "zadaj svoje meno"
+            size_hint: 0.2, 0.15
+            pos_hint: {"x":0 ,"top":1}
+        Button:
+            size_hint: 0.2, 0.2
+            pos_hint: {"x":0.2, "top":0.5}
+            text: "next"
+
+            on_press:
+                root.btn()
+                app.root.current = "ask" 
+                root.manager.transition.direction = "left"
+        Button:
+            size_hint: 0.2, 0.2
+            pos_hint: {"x":0.4, "top":0.5}
+            text: "upload"
+            on_press:
+                root.upload()
+        Button:
+            size_hint: 0.2, 0.2
+            text: "download"
+            pos_hint: {"x":0.6, "top":0.5}
+            on_press:
+                root.download()
+        Button:
+            size_hint: 0.2, 0.2
+            pos_hint: {"x":0, "top":0.5}
+            text: "delete"
+            on_press:
+                root.delete()
 
 
 
 <ModeWindow>
     name: "mode"
-    on_enter: root.new_file()
+    
     FloatLayout:
 
         size: root.width, root.height
@@ -28,9 +71,13 @@ WindowManager:
             size_hint:0.8,0.5
             text: "Mode = Train"
             background_color: 0.3, 0.4, 0.5, 1
-            on_release:
-                app.root.current = "train" 
-                root.manager.transition.direction = "left"
+            
+            
+            on_press:
+            
+                
+                root.btn() 
+                    
 
         Button:
             pos_hint:{"x":0.8, "top":1}
@@ -44,6 +91,7 @@ WindowManager:
     name : "write"
     word: word
     translated_word:translated_word
+    on_enter: root.focus()
     FloatLayout:
 
         size: root.width, root.height
@@ -52,6 +100,7 @@ WindowManager:
             size_hint: 0.8,0.5
             pos_hint: {"x":0,"top":1}
             multiline : False
+            
 
         Label:
             id : translated_word
@@ -61,17 +110,28 @@ WindowManager:
         Button:
             
             pos_hint: {"x":0,"top":0.5}
-            size_hint:0.8,0.5
+            size_hint:0.5,0.5
             text: "enter"
             background_color: 0.3, 0.4, 0.5, 1
-            on_press: root.btn()
+
+
+            on_press: 
+                root.btn()
+            on_release:
+                root.focus()
         Button:
-            pos_hint: {"x":0.8, "top":0.5}
+            pos_hint: {"x":0.5, "top":0.5}
             size_hint: 0.2, 0.5
             text: "back"
             on_release:
                 app.root.current = "mode"
                 root.manager.transition.direction = "right"
+        Button:
+            pos_hint: {"x":0.7, "top":0.5}
+            size_hint: 0.3, 0.5
+            text: "translate_untranslated"
+            on_press:
+                root.translate_untranslated()
 <AskWindow>
     name: "ask"
     f: f
@@ -79,9 +139,10 @@ WindowManager:
     from_lan : from_lan
     size: root.width, root.height
     FloatLayout:
+        
         TextInput:
             id: f
-            size_hint: 1,0.25
+            size_hint: 0.8,0.25
             pos_hint: {"x":0.2,"top":1}
             multiline : False
         TextInput:
@@ -92,16 +153,17 @@ WindowManager:
         TextInput:
             id: from_lan
             size_hint: 0.8,0.25
-            pos_hint: {"x":0.2,"top":0.50}
+            pos_hint: {"x":0.2,"top":0.5}
             multiline : False
         Button:
             size_hint: 1,0.25
             pos_hint: {"x":0,"top":0.25}
             text: "enter"
-            on_press: root.btn()
-            on_release:
-                app.root.current = "mode"
-                root.manager.transition.direction = "left"
+
+            on_press: 
+                root.btn()
+                
+                
         Label:
             size_hint: 0.2,0.25
             pos_hint: {"x":0,"top":1}
@@ -161,6 +223,7 @@ WindowManager:
                 app.root.current = "mode"
                 root.manager.transition.direction = "right"
             
+
 
 
 
