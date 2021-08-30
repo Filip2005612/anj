@@ -18,9 +18,12 @@ import com
 import os
 js = "data/global.json"
 Write.create(js)
-board = ""
-to_lan = ""
-from_lan = ""
+board = "test"
+#testovacia verzia
+Write.new_file(js,board)
+
+to_lan = "sk"
+from_lan = "en"
 
 
 
@@ -115,10 +118,10 @@ class WriteWindow(Screen):
                 for board in data:
                     print(board)
                     for word in data[board]:
-                        print(word)
                         try:
-                            Write.translate(word, to_lan, from_lan, board)
-                        except:
+                            Write.translate(word, data[board][word]['to_lan'], data[board][word]['from_lan'], board)
+                        except Exception as e:
+                            print(e)
                             print('nemas internet')
                             return
                 f.close()
@@ -136,16 +139,17 @@ class TrainWindow(Screen):
     answer = ObjectProperty(None)
    
     
-    index = 0
+    index = -1
     correct = 0
-    def __init__(self, **kw):
-        super().__init__(**kw)
-
+    # def __init__(self, **kw):
+    #     super().__init__(**kw)
+    def next_word(self):
+        TrainWindow.index += 1
     def show(self):
         self.question.text = Training.train(board,TrainWindow.random_numbers, TrainWindow.index, to_lan)
-        TrainWindow.index += 1
-        
-
+        print(TrainWindow.index)
+    def show_right_answer(self, ans):
+        self.accuracy.text = str(self.question.text) + " = " +  str(ans)
     def answering(self):
         
         answer = self.answer.text.strip()
@@ -154,16 +158,20 @@ class TrainWindow(Screen):
             self.accuracy.text = 'spravne'
             TrainWindow.correct += 1
         else:
-            self.accuracy.text = 'nespravne ' + str(ans)
+            self.show_right_answer(ans)
         self.answer.text = ""
 
     def train(self):
         
-        if TrainWindow.index >= len(TrainWindow.random_numbers):
+        if TrainWindow.index == len(TrainWindow.random_numbers):
+            self.answering()
+            #self.accuracy.text = "spravne " + str(TrainWindow.correct) + ' z ' + str(len(TrainWindow.random_numbers))
+        elif TrainWindow.index > len(TrainWindow.random_numbers):
             self.accuracy.text = "spravne " + str(TrainWindow.correct) + ' z ' + str(len(TrainWindow.random_numbers))
         else:
             self.answering()
             self.show()
+        
     def focus(self):
         self.answer.focus = True
     def delete(self):

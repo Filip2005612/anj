@@ -107,13 +107,16 @@ def checkInternetSocket(host="8.8.8.8", port=53, timeout=3):
     except socket.error:
         
         return False
-def have_not_network(word, board):
+def have_not_network(word, board, to_lan, from_lan):
     js = "data/untranslated.json"
     create(js)
     new_file(js, board)
     with open(js, 'r+') as f:
         data = json.load(f)
-        new = {word:None}
+        new = {word:{
+            "to_lan":to_lan,
+            "from_lan": from_lan
+        }}
         data[board].update(new)
         f.seek(0)
         json.dump(data, f, indent=2)
@@ -130,11 +133,11 @@ def try_translate(word_to_trans, to_lan, from_lan, board):
     except :
         if not checkInternetSocket():
             print("No internet")
-            have_not_network(word_to_trans, board)
+            have_not_network(word_to_trans, board, to_lan, from_lan)
             return 0
         else:
             print('zadavas slovo v zlom jazyku')
-            return 
+            return 1
 
     
 

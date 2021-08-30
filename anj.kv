@@ -26,7 +26,7 @@ WindowManager:
 
             on_press:
                 root.btn()
-                app.root.current = "ask" 
+                app.root.current = "mode" 
                 root.manager.transition.direction = "left"
         Button:
             size_hint: 0.2, 0.2
@@ -185,7 +185,9 @@ WindowManager:
     size: root.width, root.height
     
     on_enter: root.show()
+
     on_enter: root.focus()
+    on_enter: root.next_word()
 
 
 
@@ -212,7 +214,11 @@ WindowManager:
             size_hint: 0.8, 0.2
             pos_hint: {"x":0, "top":0.2}
             on_press: root.train()
+                
+            on_press: root.next_word()
+
             on_release: root.focus()
+
         Button:
             pos_hint: {"x":0.8, "top":0.2}
             size_hint:0.2, 0.2
