@@ -1,5 +1,6 @@
 import json
 from sys import path
+import kivy
 from nltk.util import choose, pr
 from logging import NOTSET
 from re import I, S
@@ -19,7 +20,7 @@ import os
 js = "data/global.json"
 Write.create(js)
 board = "test"
-#testovacia verzia
+#testovaca verzia
 Write.new_file(js,board)
 
 to_lan = "sk"
@@ -43,6 +44,10 @@ class NameWindow(Screen):
         print('delete')
     def download(self):
         print('download')
+
+
+
+
 
 
 
@@ -73,14 +78,24 @@ class AskWindow(Screen):
      
 
 class ModeWindow(Screen):
-    def btn(self):
+    def train(self):
         if not Training.check_file(board):
             print('idem trenovat')
-            TrainWindow.random_numbers = Training.choose(board)
+            TrainWindow.words = Training.choose(board, to_lan)
             kv.current = "train" 
             kv.transition.direction = "left" 
         else:
             print('kniznica nema ziadne slovicka')
+
+    def train_with_brain(self):
+        if not Training.check_file(board):
+            print('idem trenovat')
+            Train_with_brain_window.words = Training.choose_with_brain(board, to_lan)
+            kv.current = "train_with_brain" 
+            kv.transition.direction = "left" 
+        else:
+            print('kniznica nema ziadne slovicka')
+
     
 
         
@@ -104,6 +119,7 @@ class WriteWindow(Screen):
         self.word.text = ""
     def focus(self):
         self.word.focus = True
+
     def translate_untranslated(self):
         def delete():
             path = "data/untranslated.json"
@@ -131,60 +147,84 @@ class WriteWindow(Screen):
 
 
             
+        
+class TrainingWindows(Screen):
+    @classmethod
+    def next_word(cls):
+        cls.index += 1
     
-class TrainWindow(Screen):
+    def show(self, cls):
+        self.question.text = Training.different_langs(cls.words[cls.index], board, to_lan)
     
-    question = ObjectProperty(None)
-    accuracy = ObjectProperty(None)
-    answer = ObjectProperty(None)
-   
-    
-    index = -1
-    correct = 0
-    # def __init__(self, **kw):
-    #     super().__init__(**kw)
-    def next_word(self):
-        TrainWindow.index += 1
-    def show(self):
-        self.question.text = Training.train(board,TrainWindow.random_numbers, TrainWindow.index, to_lan)
-        print(TrainWindow.index)
     def show_right_answer(self, ans):
         self.accuracy.text = str(self.question.text) + " = " +  str(ans)
-    def answering(self):
         
-        answer = self.answer.text.strip()
-        ans = Training.check(TrainWindow.index,TrainWindow.random_numbers, answer, board, to_lan)
+    def answering(self, cls):
+        # answer = self.answer.text.strip()
+        answer  = self.answer.text  
+        
+        # question = different_langs(cls.words[cls.index], board)
+        ans = Training.check(cls.words[cls.index - 1] ,answer, board, to_lan)
         if ans == 1:
             self.accuracy.text = 'spravne'
-            TrainWindow.correct += 1
+            cls.correct += 1
+            # self.uptade_right_answers(question, board)
         else:
             self.show_right_answer(ans)
         self.answer.text = ""
 
-    def train(self):
-        
-        if TrainWindow.index == len(TrainWindow.random_numbers):
-            self.answering()
+    def train(self, cls):
+
+        cls = eval(cls)
+        if cls.index == len(cls.words):
+            self.answering(cls)
             #self.accuracy.text = "spravne " + str(TrainWindow.correct) + ' z ' + str(len(TrainWindow.random_numbers))
-        elif TrainWindow.index > len(TrainWindow.random_numbers):
-            self.accuracy.text = "spravne " + str(TrainWindow.correct) + ' z ' + str(len(TrainWindow.random_numbers))
+        elif cls.index > len(cls.words):
+            self.accuracy.text = "spravne " + str(cls.correct) + ' z ' + str(len(cls.words))
+        elif cls.index == 0:
+            self.show(cls)
         else:
-            self.answering()
-            self.show()
+            self.answering(cls)
+            self.show(cls)
         
     def focus(self):
         self.answer.focus = True
-    def delete(self):
-        TrainWindow.index = 0
+
+    def delete(self, cls):
+        cls = eval(cls)
+        cls.index = 0
         self.question.text = ''
         self.answer.text = ''
-        TrainWindow.correct = 0
-        TrainWindow.random_numbers = Training.choose(board)
+        cls.correct = 0
+        #TrainWindow.random_numbers = Training.choose(board)
         self.accuracy.text = ''
+    # def uptade_right_answers(self, question, board):
+    #     with open(js, 'r') as f:
+    #         data = json.load(f)
+    #         fl = data[board]
+    #         fl[question]['right_answers'] += 1
+    #         json.dump(data, f, indent= 2)
 
+class TrainWindow(TrainingWindows):
+    
+    question = ObjectProperty(None)
+    accuracy = ObjectProperty(None)
+    answer = ObjectProperty(None)
+    index = 0
+    correct = 0
+    # def __init__(self, **kw):
+    #     super().__init__(**kw)
 
+class Train_with_brain_window(TrainingWindows):
+    question = ObjectProperty(None)
+    accuracy = ObjectProperty(None)
+    answer = ObjectProperty(None)
+    index = 0
+    correct = 0
+    # def __init__(self, **kw):
+    #     super().__init__(**kw)
 
-
+    
 class WindowManager(ScreenManager):
     pass
 

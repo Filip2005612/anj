@@ -5,19 +5,21 @@ import json
 import socket
 
 def translate(word_to_trans, to_lan, from_lan, board):
-    word = str(TextBlob(word_to_trans).translate(to = to_lan, from_lang= from_lan))
-
-    if not check_word(word, board):
+    if not check_word(word_to_trans, board):
+        word = str(TextBlob(word_to_trans).translate(to = to_lan, from_lang= from_lan))
         append(word, word_to_trans, board, to_lan)
+        return word
+    else:
+        return "uz tu je"
 
-    return word
+    
 
 
 def append(word, text, board, language):
     with open('data/global.json', 'r+') as f:
         
         if language != 'sk':
-            new = {word : text}
+            new = {word : {"translated": text, "right_answers": 0 }}
             data = json.load(f)
             data[board].update(new)
             f.seek(0)
@@ -25,7 +27,7 @@ def append(word, text, board, language):
             f.close()
             
         else:
-            new = {text : word}
+            new = {text : {"translated": word, "right_answers": 0}}
             data = json.load(f)
             data[board].update(new)
             f.seek(0)
@@ -39,11 +41,11 @@ def check_word(word, board):
     fi = data[board]
 
     for key in fi:
-        if key == word:
-            print('uz tu je')
+        if fi[key]['translated'] == word:
+            print('uz tu je slovenske')
             return True
-        if fi[key] == word:
-            print('uz tu je')
+        if key == word:
+            print('uz tu je anglicke')
             return True
     return False
 

@@ -4,6 +4,7 @@ WindowManager:
     ModeWindow:
     WriteWindow:
     TrainWindow:
+    Train_with_brain_window:
     
 <NameWindow>
     size: root.width, root.height
@@ -57,7 +58,7 @@ WindowManager:
         size: root.width, root.height
         Button: 
             text: "Mode = Write"
-            size_hint: 0.8,0.5
+            size_hint: 0.8,0.3
             pos_hint: {"x":0,"top":1}
             
             on_release:
@@ -67,18 +68,18 @@ WindowManager:
 
         Button:
             
-            pos_hint: {"x":0,"top":0.5}
-            size_hint:0.8,0.5
+            pos_hint: {"x":0,"top":0.7}
+            size_hint:0.8,0.3
             text: "Mode = Train"
             background_color: 0.3, 0.4, 0.5, 1
-            
-            
-            on_press:
-            
-                
-                root.btn() 
+            on_press: root.train()
                     
+        Button:
 
+            pos_hint: {"x":0, "top":0.4}
+            size_hint: 0.8, 0.4
+            text: "Mode = Train_with_brain"
+            on_press: root.train_with_brain()
         Button:
             pos_hint:{"x":0.8, "top":1}
             size_hint: 0.2, 1
@@ -86,6 +87,7 @@ WindowManager:
             on_release:
                 app.root.current = "ask"
                 root.manager.transition.direction = "right"
+        
         
 <WriteWindow>
     name : "write"
@@ -184,10 +186,10 @@ WindowManager:
     answer:answer
     size: root.width, root.height
     
-    on_enter: root.show()
+    on_enter: root.train('TrainWindow')
 
     on_enter: root.focus()
-    on_enter: root.next_word()
+    
 
 
 
@@ -208,12 +210,12 @@ WindowManager:
             id: answer
             pos_hint: {"x":0, "top":0.6}
             size_hint: 1, 0.4
-            focus: True
+            
             
         Button:
             size_hint: 0.8, 0.2
             pos_hint: {"x":0, "top":0.2}
-            on_press: root.train()
+            on_press: root.train("TrainWindow")
                 
             on_press: root.next_word()
 
@@ -224,13 +226,56 @@ WindowManager:
             size_hint:0.2, 0.2
             text: "back"
             on_press:
-                root.delete()
+                root.delete("TrainWindow")
             on_release:
                 app.root.current = "mode"
                 root.manager.transition.direction = "right"
             
 
+<Train_with_brain_window>
+    name: "train_with_brain"
+    size: root.width, root.height
+    question: question
+    accuracy: accuracy
+    answer:answer
+    on_enter: root.train("Train_with_brain_window")
+    on_enter: root.focus()
 
+    FloatLayout:
+        Label:
+            id: question
+            pos_hint: {"x":0, "top":1}
+            text: ""
+            size_hint:0.5,0.4
+        Label:
+            id: accuracy
+            pos_hint: {"x":0.5, "top":1}
+            size_hint: 0.5, 0.4      
+            text: "tu bude spravna odpoved"
+        
+            
+        TextInput:
+            id: answer
+            pos_hint: {"x":0, "top":0.6}
+            size_hint: 1, 0.4
+            
+        Button:
+            size_hint: 0.8, 0.2
+            pos_hint: {"x":0, "top":0.2}
+        
+            on_press: root.train("Train_with_brain_window")
+                
+            on_press: root.next_word()
 
+            on_release: root.focus()
+
+        Button:
+            pos_hint: {"x":0.8, "top":0.2}
+            size_hint:0.2, 0.2
+            text: "back"
+            on_press: root.delete("Train_with_brain_window")
+            on_release:
+                app.root.current = "mode"
+                root.manager.transition.direction = "right"
 
 
