@@ -1,6 +1,6 @@
 import random
 import json
-import re
+# import re
 def check_file(board):
     with open('data/global.json', 'r') as f:
         data = json.load(f)

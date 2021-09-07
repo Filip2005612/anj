@@ -1,5 +1,5 @@
-from hashlib import new
-from nltk.util import pr
+# from hashlib import new
+# from nltk.util import pr
 from textblob import TextBlob
 import json
 import socket
@@ -111,8 +111,8 @@ def checkInternetSocket(host="8.8.8.8", port=53, timeout=3):
         return False
 def have_not_network(word, board, to_lan, from_lan):
     js = "data/untranslated.json"
-    create(js)
-    new_file(js, board)
+    new_file(js,board)
+    
     with open(js, 'r+') as f:
         data = json.load(f)
         new = {word:{

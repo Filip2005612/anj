@@ -1,27 +1,23 @@
 import json
-from sys import path
-import kivy
-from nltk.util import choose, pr
-from logging import NOTSET
-from re import I, S
+
 from kivy.app import App
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.label import Label
-from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-from nltk import text
-from textblob import TextBlob
 import Write
 import Training
 import com
-import os
+# import os
 js = "data/global.json"
 Write.create(js)
-board = "test"
+Write.create('data/untranslated.json')
+board = ""
 #testovaca verzia
-Write.new_file(js,board)
+
+
+
+
+
 
 to_lan = "sk"
 from_lan = "en"
@@ -122,27 +118,31 @@ class WriteWindow(Screen):
 
     def translate_untranslated(self):
         def delete():
-            path = "data/untranslated.json"
-            if os.path.exists(path):
-                os.remove(path)
-            else:
-                print('neni taka')
+            with open('data/untranslated.json', 'w') as f:
+                d = {}
+                json.dump(d, f)
+
         try:
             with open('data/untranslated.json', 'r') as f:
                 data = json.load(f)
+                fl = data[board]
                 
-                for board in data:
-                    print(board)
-                    for word in data[board]:
-                        try:
-                            Write.translate(word, data[board][word]['to_lan'], data[board][word]['from_lan'], board)
-                        except Exception as e:
-                            print(e)
-                            print('nemas internet')
-                            return
+                for word in fl:
+                    
+                    trns = Write.try_translate(word, data[board][word]['to_lan'], data[board][word]['from_lan'], board)
+                    if trns == 0:
+                        print('nemas internet')
+                        return
+                    if trns == 1:
+                        print('zadal si slovo v zlom jazyku')
+
+                # data = {}
+                # json.dump(data, f, indent=2)
                 f.close()
+            print('idem deletovat')
             delete()
-        except:
+        except Exception as f:
+            print(f)
             print('neni co na prelozenie')
 
 
