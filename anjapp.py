@@ -6,19 +6,13 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import Write
 import Training
-import com
-# import os
-js = "data/global.json"
+
+js = "global.json"
+un_js = "untranslated.json"
 Write.create(js)
-Write.create('data/untranslated.json')
+Write.create(un_js)
+
 board = ""
-#testovaca verzia
-
-
-
-
-
-
 to_lan = "sk"
 from_lan = "en"
 
@@ -31,10 +25,10 @@ class NameWindow(Screen):
     def btn(self):
         pass
     def upload(self):
-        with open('data/global.json', 'r') as f:
+        with open(js, 'r') as f:
             data = json.load(f)
             data = json.dumps(data)
-            com.upload('filip', data)
+            
         print('upload')
     def delete(self):
         print('delete')
@@ -66,7 +60,6 @@ class AskWindow(Screen):
         else:
             kv.current = "mode"
             kv.transition.direction = "left"
-            #Write.alphabetcally(file)
             Write.new_file(js, board)
 
         
@@ -118,12 +111,12 @@ class WriteWindow(Screen):
 
     def translate_untranslated(self):
         def delete():
-            with open('data/untranslated.json', 'w') as f:
+            with open(un_js, 'w') as f:
                 d = {}
                 json.dump(d, f)
 
         try:
-            with open('data/untranslated.json', 'r') as f:
+            with open(un_js, 'r') as f:
                 data = json.load(f)
                 fl = data[board]
                 
@@ -139,10 +132,9 @@ class WriteWindow(Screen):
                 # data = {}
                 # json.dump(data, f, indent=2)
                 f.close()
-            print('idem deletovat')
             delete()
+           
         except Exception as f:
-            print(f)
             print('neni co na prelozenie')
 
 

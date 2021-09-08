@@ -1,8 +1,10 @@
 import random
 import json
 # import re
+
+js = "global.json"
 def check_file(board):
-    with open('data/global.json', 'r') as f:
+    with open(js, 'r') as f:
         data = json.load(f)
         lines = list(data[board].items())
         if len(lines) == 0:
@@ -14,7 +16,7 @@ def check_file(board):
             return False
         
 def choose(board, to_lan):
-    with open('data/global.json', 'r') as f:
+    with open(js, 'r') as f:
         data = json.load(f)
         fl = data[board]
         lenght = 0
@@ -39,7 +41,7 @@ def choose(board, to_lan):
                 
     
 def different_langs(word, board, to_lan):
-    with open('data/global.json', 'r') as f:
+    with open(js, 'r') as f:
         
         if to_lan == 'sk':
             f.close()
@@ -53,7 +55,7 @@ def different_langs(word, board, to_lan):
             
 def check(question  ,answer, board, to_lan):
     print(question)
-    with open('data/global.json', 'r') as f:
+    with open(js, 'r') as f:
         data = json.load(f) 
         fl = data[board]
         # with open('data/global.json', 'w') as fi:
@@ -64,7 +66,7 @@ def check(question  ,answer, board, to_lan):
             right_answer = question
             
         if right_answer == answer:
-            with open('data/global.json', 'w') as fi:
+            with open(js, 'w') as fi:
                 fl[question]['right_answers'] += 1
                 json.dump(data, fi, indent=2)
                 fi.close()
@@ -85,7 +87,7 @@ def check(question  ,answer, board, to_lan):
 def choose_with_brain(board, to_lan):
     dict_words = {}
     list_words = []
-    with open('data/global.json', 'r') as f:
+    with open(js, 'r') as f:
         data = json.load(f)
         fl = data[board]
         lenght = 0

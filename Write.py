@@ -3,7 +3,8 @@
 from textblob import TextBlob
 import json
 import socket
-
+js = 'global.json'
+un_js = "untranslated.json"
 def translate(word_to_trans, to_lan, from_lan, board):
     if not check_word(word_to_trans, board):
         word = str(TextBlob(word_to_trans).translate(to = to_lan, from_lang= from_lan))
@@ -16,7 +17,7 @@ def translate(word_to_trans, to_lan, from_lan, board):
 
 
 def append(word, text, board, language):
-    with open('data/global.json', 'r+') as f:
+    with open(js, 'r+') as f:
         
         if language != 'sk':
             new = {word : {"translated": text, "right_answers": 0 }}
@@ -36,7 +37,7 @@ def append(word, text, board, language):
 
 
 def check_word(word, board):
-    f = open('data/global.json')
+    f = open(js)
     data = json.load(f)
     fi = data[board]
 
@@ -63,6 +64,7 @@ def create(file):
         d = {}
         json.dump(d, f, indent= 2)
     f.close()
+
 def new_file(file,board):
     f = open(file, 'r+')
     data = json.load(f)
@@ -110,10 +112,10 @@ def checkInternetSocket(host="8.8.8.8", port=53, timeout=3):
         
         return False
 def have_not_network(word, board, to_lan, from_lan):
-    js = "data/untranslated.json"
-    new_file(js,board)
     
-    with open(js, 'r+') as f:
+    new_file(un_js,board)
+    
+    with open(un_js, 'r+') as f:
         data = json.load(f)
         new = {word:{
             "to_lan":to_lan,
