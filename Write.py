@@ -1,13 +1,31 @@
-# from hashlib import new
-# from nltk.util import pr
-from textblob import TextBlob
+
 import json
 import socket
+from kivy.network.urlrequest import UrlRequest
 js = 'global.json'
 un_js = "untranslated.json"
+
+# def trans(self, *args):
+#     url = "http://translate.pythonanywhere.com/t"
+
+#     data = {"word":self.word.text, "to_lan":"sk", "from_lan":"en"}
+
+#     headers = {'Content-type': 'application/json','Accept': 'text/plain'}
+
+#     self.r = UrlRequest(url, req_body=json.dumps(data), req_headers=headers,on_success=self.get_success, on_failure=self.fail, on_error=self.fail)
+
+# def get_success(self, *args):
+#     self.test.text = str(self.r.result["word"])
+#     print(self.r.result)
+
+# def fail(self, *args):
+#     print("f")
+#     print(self.r.result)
+
+
 def translate(word_to_trans, to_lan, from_lan, board):
     if not check_word(word_to_trans, board):
-        word = str(TextBlob(word_to_trans).translate(to = to_lan, from_lang= from_lan))
+        word = 1
         append(word, word_to_trans, board, to_lan)
         return word
     else:

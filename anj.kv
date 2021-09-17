@@ -5,6 +5,8 @@ WindowManager:
     WriteWindow:
     TrainWindow:
     Train_with_brain_window:
+    Append_window:
+    Manage_window:
     
 <NameWindow>
     size: root.width, root.height
@@ -58,7 +60,7 @@ WindowManager:
         size: root.width, root.height
         Button: 
             text: "Mode = Write"
-            size_hint: 0.8,0.3
+            size_hint: 0.8,0.2
             pos_hint: {"x":0,"top":1}
             
             on_release:
@@ -68,18 +70,38 @@ WindowManager:
 
         Button:
             
-            pos_hint: {"x":0,"top":0.7}
-            size_hint:0.8,0.3
+            pos_hint: {"x":0,"top":0.8}
+            size_hint:0.8,0.2
             text: "Mode = Train"
             background_color: 0.3, 0.4, 0.5, 1
             on_press: root.train()
                     
         Button:
 
-            pos_hint: {"x":0, "top":0.4}
-            size_hint: 0.8, 0.4
+            pos_hint: {"x":0, "top":0.6}
+            size_hint: 0.8, 0.2
             text: "Mode = Train_with_brain"
             on_press: root.train_with_brain()
+
+
+
+
+        Button:
+            pos_hint:{"x":0, "top":0.4}
+            size_hint: 0.2, 0.4
+            text: "Append mode"
+            on_release:
+                app.root.current = "append"
+                root.manager.transition.direction = "right"
+        Button:
+            pos_hint:{"x":0.4, "top":0.4}
+            size_hint: 0.2, 0.4
+            text: "Manage mode"
+            on_release:
+                app.root.current = "manage"
+                root.manager.transition.direction = "right"
+            
+
         Button:
             pos_hint:{"x":0.8, "top":1}
             size_hint: 0.2, 1
@@ -277,5 +299,91 @@ WindowManager:
             on_release:
                 app.root.current = "mode"
                 root.manager.transition.direction = "right"
+<Append_window>
+    name:"append"
+    size: root.width, root.height
+    to_append:to_append
+    FloatLayout:
+
+        TextInput: 
+            id: to_append
+            size_hint: 0.8,0.5
+            pos_hint: {"x":0,"top":1}
+            multiline : False
+            
+
+        Button:
+            
+            pos_hint: {"x":0,"top":0.5}
+            size_hint:0.5,0.5
+            text: "enter"
+            background_color: 0.3, 0.4, 0.5, 1
 
 
+            on_press: 
+                root.append()
+            on_release:
+                root.focus()
+        Button:
+            pos_hint: {"x":0.5, "top":0.5}
+            size_hint: 0.2, 0.5
+            text: "back"
+            on_release:
+                app.root.current = "mode"
+                root.manager.transition.direction = "right"
+<Manage_window>
+    name: "manage"
+    size: root.width, root.height
+    data : data
+
+    on_enter: root.focus()
+    on_enter: root.create_data()
+            
+    FloatLayout:
+        TextInput: 
+            id: data
+            size_hint: 0.8,0.5
+            pos_hint: {"x":0,"top":1}
+            text: ""
+            font_size: data.height/16
+        Button:
+            
+            pos_hint: {"x":0.6,"top":0.5}
+            size_hint:0.2,0.2
+            text: "Up"
+            background_color: 0.3, 0.4, 0.5, 1
+            on_press: root.up()
+            
+
+        Button:
+            
+            pos_hint: {"x":0.8,"top":0.5}
+            size_hint:0.2,0.2
+            text: "Down"
+            background_color: 0.3, 0.4, 0.5, 1
+            on_press: root.down()
+            
+
+        Button:
+            
+            pos_hint: {"x":0,"top":0.5}
+            size_hint:0.5,0.5
+            text: "enter"
+            background_color: 0.3, 0.4, 0.5, 1
+
+
+            on_press: 
+                root.store_data()
+            on_release: 
+                root.focus()
+        Button:
+            pos_hint: {"x":0.5, "top":0.5}
+            size_hint: 0.2, 0.5
+            text: "back"
+            on_press: root.delete()
+            on_release:
+                app.root.current = "mode"
+                root.manager.transition.direction = "right"
+
+        
+            
