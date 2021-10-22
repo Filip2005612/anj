@@ -1,36 +1,97 @@
 WindowManager:
-    NameWindow:
+    RegisterWindow:
+    LoginWindow:
+    FileWindow:
     AskWindow: 
+    EnterFileWindow:
     ModeWindow:
     WriteWindow:
     TrainWindow:
     Train_with_brain_window:
     Append_window:
     Manage_window:
-    
-<NameWindow>
+<RegisterWindow>
     size: root.width, root.height
-    name: "name"
+    name: "register"
     name_of_user: name_of_user
+    password: password
+    email :email
     FloatLayout:
+        Label:
+            
+            text: "zadaj svoje meno"
+            size_hint: 0.2, 0.15
+            pos_hint: {"x":0 ,"top":1}
         TextInput:
             id :name_of_user
             size_hint: 0.8, 0.15
             pos_hint: {"x":0.2, "top":1}
             multiline: False
         Label:
-            text: "zadaj svoje meno"
+            text: "zadaj svoje heslo"
+            size_hint: 0.2, 0.15
+            pos_hint: {"x":0 ,"top":0.7}
+        TextInput:
+            id : password
+            size_hint: 0.8, 0.15
+            pos_hint: {"x":0.2, "top":0.7}
+            multiline: False
+        Label:
+            text: "zadaj svoj email"
+            size_hint: 0.2, 0.15
+            pos_hint: {"x":0 ,"top":0.4}
+        TextInput:
+            id :email
+            size_hint: 0.8, 0.15
+            pos_hint: {"x":0.2, "top":0.4}
+            multiline: False
+        Button:
+            size_hint: 0.1, 0.1
+            pos_hint: {"x":0.1, "top":0.1}
+            text: "Enter"
+            on_press:
+                root.register()
+                
+        Button:
+            size_hint: 0.1, 0.1
+            pos_hint: {"x":0, "top":0.1}
+            text: "Login"
+            on_press:
+                app.root.current = "login" 
+                root.manager.transition.direction = "left"
+
+<LoginWindow>
+    size: root.width, root.height
+    name: "login"
+    email: email
+    password: password
+    FloatLayout:
+        TextInput:
+            id : email
+            size_hint: 0.8, 0.15
+            pos_hint: {"x":0.2, "top":1}
+            multiline: False
+        Label:
+            text: "zadaj svoj email"
             size_hint: 0.2, 0.15
             pos_hint: {"x":0 ,"top":1}
+        TextInput:
+            id :password    
+            size_hint: 0.8, 0.15
+            pos_hint: {"x":0.2, "top":0.8}
+            multiline: False
+        Label:
+            text: "heslo"
+            size_hint: 0.2, 0.15
+            pos_hint: {"x":0 ,"top":0.8}
         Button:
             size_hint: 0.2, 0.2
             pos_hint: {"x":0.2, "top":0.5}
             text: "next"
 
             on_press:
-                root.btn()
-                app.root.current = "ask" 
-                root.manager.transition.direction = "left"
+                root.login()
+                
         Button:
             size_hint: 0.2, 0.2
             pos_hint: {"x":0.4, "top":0.5}
@@ -156,6 +217,75 @@ WindowManager:
             text: "translate_untranslated"
             on_press:
                 root.translate_untranslated()
+<FileWindow>
+    name: "file_window"
+    size: root.width, root.height
+    FloatLayout:
+        Button:
+            pos_hint: {"x":0.0, "top":0.2}
+            size_hint:0.2, 0.2
+            text: "New file"
+            on_release:
+                app.root.current = "ask"
+                root.manager.transition.direction = "right"
+        Button:
+            pos_hint: {"x":0.8, "top":0.2}
+            size_hint:0.2, 0.2
+            text: "Enter to existing file"
+            on_release:
+                app.root.current = "enter_file"
+                root.manager.transition.direction = "right"
+        Button:
+            pos_hint: {"x":0.4, "top":0.2}
+            size_hint:0.2, 0.2
+            text: "login"
+            on_release:
+                app.root.current = "login"
+                root.manager.transition.direction = "right"
+        Button:
+            pos_hint: {"x":0.6, "top":0.2}
+            size_hint:0.2, 0.2
+            text: "register"
+            on_release:
+                app.root.current = "register"
+                root.manager.transition.direction = "right"
+<EnterFileWindow>
+    name: "enter_file"
+    size: root.width, root.height
+    on_enter: root.show_boards()
+    board:board
+    label : label
+    
+    FloatLayout:
+        
+        Label:
+            id: label
+            text: ""
+            pos_hint: {"x":0, "top":1}
+            size_hint:0.2, 1
+            
+        TextInput:
+            id: board
+            pos_hint: {"x":0.2, "top":1}
+            size_hint:0.8, 0.5
+        Button:
+            size_hint: 0.2,0.25
+            pos_hint: {"x":0.6,"top":0.25}
+            text: "enter"
+            on_press: root.btn()
+        Button:
+            size_hint: 0.2,0.25
+            pos_hint: {"x":0.8,"top":0.5}
+            text: "turn"
+            on_press: root.turn()
+        
+        Button:
+            size_hint: 0.2,0.25
+            pos_hint: {"x":0.8,"top":0.25}
+            text: "back"
+            on_release:
+                app.root.current = "file_window"
+                root.manager.transition.direction = "right"
 <AskWindow>
     name: "ask"
     f: f
@@ -180,12 +310,21 @@ WindowManager:
             pos_hint: {"x":0.2,"top":0.5}
             multiline : False
         Button:
-            size_hint: 1,0.25
+            size_hint: 0.8,0.25
             pos_hint: {"x":0,"top":0.25}
             text: "enter"
 
             on_press: 
                 root.btn()
+        Button:
+            size_hint: 0.2,0.25
+            pos_hint: {"x":0.8,"top":0.25}
+            text: "back"
+            on_release:
+                app.root.current = "file_window"
+                root.manager.transition.direction = "right"
+
+        
                 
                 
         Label:
@@ -336,7 +475,6 @@ WindowManager:
     size: root.width, root.height
     data : data
 
-    on_enter: root.focus()
     on_enter: root.create_data()
             
     FloatLayout:
@@ -346,6 +484,7 @@ WindowManager:
             pos_hint: {"x":0,"top":1}
             text: ""
             font_size: data.height/16
+            multiline: False
         Button:
             
             pos_hint: {"x":0.6,"top":0.5}

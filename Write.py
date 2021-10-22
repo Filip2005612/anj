@@ -36,8 +36,12 @@ def translate(word_to_trans, to_lan, from_lan, board):
 
 def append(word, text, board, language):
     with open(js, 'r+') as f:
-        
-        if language != 'sk':
+        data = json.load(f) 
+        fl = data[board]['words']
+        to_lan = fl['to_lan']
+        # from_lan = fl['from_lan']
+        main_lan = fl['main_lan']
+        if to_lan == main_lan:
             new = {word : {"translated": text, "right_answers": 0 }}
             data = json.load(f)
             data[board].update(new)
@@ -82,21 +86,63 @@ def create(file):
         d = {}
         json.dump(d, f, indent= 2)
     f.close()
+def create_register(file):
+    try:
+        
+        f = open(file, 'r+')
+        
+    except:
+        print('nie je tu')
+        f = open(file, 'a')
+    
+        d = {"login": False, 'user':{}, "email":{}}
+        json.dump(d, f, indent= 2)
+    f.close()
 
-def new_file(file,board):
+def new_file(file,board, to_lan ,from_lan):
     f = open(file, 'r+')
     data = json.load(f)
     try:
         a = data[board]
+        print('taka uz existuje')
+        return 0
     except:
         
-        fl = {board : {}}
+        fl = {board : {'to_lan': to_lan,
+                        'from_lan':from_lan,
+                        'main_lan':from_lan,
+                        'words':{}
+                }
+            }
         data.update(fl)
         f.seek(0)
         json.dump(data, f, indent=2)
-
-
-
+def enter_board(file, board):
+    f = open(file, 'r')
+    data = json.load(f)
+    try:
+        board = data[board]
+        to_lan = board['to_lan']
+        from_lan = board['from_lan']
+        print('fungujem')
+        f.close()
+        return [to_lan, from_lan]
+    except:
+        f.close()
+        return 0
+def turn_langs(js, board):
+    with open(js, 'r') as f:
+        data = json.load(f)
+        fl = data[board]
+        TO = fl['to_lan']
+        FR = fl['from_lan']
+        fl['to_lan'] = FR
+        fl['from_lan'] = TO   
+        f.close()
+    with open(js, 'w') as f:
+        print(data)
+        json.dump(data, f, indent=2)
+        f.close()
 def alphabetcally(board):
     with open('data/global.json', 'r+') as f:
 
@@ -131,7 +177,7 @@ def checkInternetSocket(host="8.8.8.8", port=53, timeout=3):
         return False
 def have_not_network(word, board, to_lan, from_lan):
     
-    new_file(un_js,board)
+    new_file(un_js,board, to_lan, from_lan)
     
     with open(un_js, 'r+') as f:
         data = json.load(f)

@@ -6,7 +6,7 @@ js = "global.json"
 def check_file(board):
     with open(js, 'r') as f:
         data = json.load(f)
-        lines = list(data[board].items())
+        lines = list(data[board]['words'].items())
         if len(lines) == 0:
             f.close()
             return True
@@ -15,10 +15,10 @@ def check_file(board):
             f.close()
             return False
         
-def choose(board, to_lan):
+def choose(board):
     with open(js, 'r') as f:
         data = json.load(f)
-        fl = data[board]
+        fl = data[board]['words']
         lenght = 0
         list_words = []
         for word in fl:
@@ -40,34 +40,44 @@ def choose(board, to_lan):
                 
                 
     
-def different_langs(word, board, to_lan):
+def different_langs(word, board):
     with open(js, 'r') as f:
-        
-        if to_lan == 'sk':
+        data = json.load(f) 
+        fl = data[board]
+        to_lan = fl['to_lan']
+        # from_lan = fl['from_lan']
+        main_lan = fl['main_lan']
+        if to_lan != main_lan:
             f.close()
             return word
             
-        if to_lan == 'en':
-            data = json.load(f)
-            fl = data[board]
+        else:
             f.close()
-            return fl[word]['translated']
+            return fl['words'][word]['translated']
             
-def check(question  ,answer, board, to_lan):
+def check(question  ,answer, board):
     print(question)
     with open(js, 'r') as f:
         data = json.load(f) 
         fl = data[board]
-        # with open('data/global.json', 'w') as fi:
-        if to_lan == 'sk':
-            right_answer = fl[question]['translated']
+        to_lan = fl['to_lan']
+        # from_lan = fl['from_lan']
+        main_lan = fl['main_lan'] 
+
+         # with open('data/global.json', 'w') as fi:
+        # if to_lan == 'sk':
+        #     right_answer = fl[question]['translated']
             
-        if to_lan == 'en':
+        # if to_lan == 'en':
+        #     
+        if to_lan != main_lan:
+            right_answer = fl['words'][question]['translated']
+        if to_lan == main_lan:
             right_answer = question
-            
+
         if right_answer == answer:
             with open(js, 'w') as fi:
-                fl[question]['right_answers'] += 1
+                fl['words'][question]['right_answers'] += 1
                 json.dump(data, fi, indent=2)
                 fi.close()
                 f.close()
@@ -84,15 +94,18 @@ def check(question  ,answer, board, to_lan):
     
         
 
-def choose_with_brain(board, to_lan):
+def choose_with_brain(board):
     dict_words = {}
     list_words = []
     with open(js, 'r') as f:
         data = json.load(f)
         fl = data[board]
+        to_lan = fl['to_lan']
+        # from_lan = fl['from_lan']
+        main_lan = fl['main_lan']
         lenght = 0
-        for word in fl:
-            right_answers = fl[word]['right_answers']
+        for word in fl['words']:
+            right_answers = fl['words'][word]['right_answers']
             
             dict_words[word] = right_answers
             lenght += 1
@@ -122,11 +135,11 @@ def choose_with_brain(board, to_lan):
             else:
                 r = random.sample(res, len(res) + rest)
                 for i in r:
-                    if to_lan == 'sk':
-                        list_words.append(i)
-                    if to_lan == 'en':
-                        w = fl[i]['translated']
-                        list_words.append(w)
+                    # if to_lan == main_lan:
+                    list_words.append(i)
+                    # else:
+                    #     w = fl['words'][i]['translated']
+                    #     list_words.append(w)
                 
         find()
 
